@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <h1 style="display: flex;align-items: center; color:gray;padding-left: 20px;">Image Resizer</h1>
+    <div class="md:flex flex-row w-full h-[250px] a p-10 bg-gray-100 gap-4" >
+    <form id="resize-form" action="/resize" method="post" enctype="multipart/form-data"  class=" flex flex-col">
+        <input type="file" name="image" required accept="image/*" class="bg-orange-300 text-white hover:bg-orange-400">
+         <div class="sm:flex flex-row gap-2 md:flex flex-row" >
+            <label for="width">Width:</label> 
+            <input type="range" name="width" step="10" min="1" max="1200" value="100" oninput="updateWidthValue()">
+            <span id="width-value">100</span>px
+    
+         </div>
+          <div class="sm:flex flex-row gap-2 md:flex flex-row">
+            <label for="height">Height:</label> 
+        <input type="range" name="height" step="10" min="1" max="1200" value="100" oninput="updateHeightValue()">
+        <span id="height-value">100</span>px
+          </div>
+
+        <button type="submit" class="bg-indigo-400 text-white border px-3 py-3 rounded hover:bg-indigo-500">Download Resize Image</button>
+    </form>
+     </div>
+    <h2 style="color: gray;">Resized Image</h2>
+    <img src="#" id="resized-image" alt="Resized image" style="max-width: 100%; display: block;">
+    <a href="#" id="download-link" style="display: none; color:blue">Show Resized Image</a>
+
+    <!-- <script>
+        const widthInput = document.querySelector('[name="width"]');
+        const heightInput = document.querySelector('[name="height"]');
+        const widthValue = document.getElementById('width-value');
+        const heightValue = document.getElementById('height-value');
+        const resizeImage = document.getElementById('resized-image');
+        const downloadLink = document.getElementById("download-link");
+
+        function updateWidthValue() {
+            widthValue.textContent = widthInput.value;
+            resizeImagePreview();
+        }
+
+        function updateHeightValue() {
+            heightValue.textContent = heightInput.value;
+            resizeImagePreview();
+        }
+
+        function resizeImagePreview() {
+            const formData = new FormData();
+            formData.append("width", widthInput.value);
+            formData.append("height", heightInput.value);
+            formData.append("image", document.querySelector('[name="image"]').files[0]);
+
+            fetch('/resize', {
+                method: "POST",
+                body: formData
+            })
+            .then((response) => response.blob())
+            .then((blob) => {
+                const objectUrl = URL.createObjectURL(blob);
+                resizeImage.src = objectUrl;
+                downloadLink.href = objectUrl;
+                downloadLink.style.display = "block";
+            })
+            .catch((err) => {
+                console.error(err);
+                resizeImage.src = '';
+                downloadLink.style.display = "none";
+            });
+        }
+
+        // Add event listeners for sliders
+        widthInput.addEventListener('input', updateWidthValue);
+        heightInput.addEventListener('input', updateHeightValue);
+    </script> -->
+    <script>
+        const widthInput = document.querySelector('[name="width"]');
+        const heightInput = document.querySelector('[name="height"]');
+        const widthValue = document.getElementById('width-value');
+        const heightValue = document.getElementById('height-value');
+        const resizeImage = document.getElementById('resized-image');
+        const downloadLink = document.getElementById("download-link");
+    
+        function updateWidthValue() {
+            widthValue.textContent = widthInput.value;
+            resizeImagePreview();
+        }
+    
+        function updateHeightValue() {
+            heightValue.textContent = heightInput.value;
+            resizeImagePreview();
+        }
+    
+        function resizeImagePreview() {
+            const formData = new FormData();
+            formData.append("width", widthInput.value);
+            formData.append("height", heightInput.value);
+    
+            const imageFile = document.querySelector('[name="image"]').files[0];
+            if (imageFile) {
+                formData.append("image", imageFile);
+            }
+    
+            fetch('/resize', {
+                method: "POST",
+                body: formData
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to resize image');
+                }
+                return response.blob();
+            })
+            .then((blob) => {
+                const objectUrl = URL.createObjectURL(blob);
+                resizeImage.src = objectUrl;
+                downloadLink.href = objectUrl;
+                downloadLink.style.display = "block";
+            })
+            .catch((err) => {
+                console.error(err);
+                resizeImage.src = '';  // Reset the image if there's an error
+                downloadLink.style.display = "none";
+            });
+        }
+    
+        // Add event listeners for sliders
+        widthInput.addEventListener('input', updateWidthValue);
+        heightInput.addEventListener('input', updateHeightValue);
+    </script>
+    
+
+</body>
+</html>
